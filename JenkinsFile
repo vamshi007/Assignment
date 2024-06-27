@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    stages {
+        stage('Deploy to Kubernetes') {
+            steps {
+                // installation, permission and moving to specific directory
+                sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.23.0/bin/linux/amd64/kubectl"'
+                sh 'chmod +x kubectl'
+                sh 'sudo mv kubectl /usr/local/bin/'
+
+                // applying the deplayment
+                sh 'kubectl apply -f Deploy.yaml'
+
+                // check weather deployment is done or not
+                sh 'kubectl rollout status deployment/wisecow-deployment'
+            }
+        }
+    }
+}
